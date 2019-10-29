@@ -1,0 +1,45 @@
+<view class="container">
+
+  <!--------------------------------------manager角色----------------------------------------->
+  <view style="height:{{globalHeight}}rpx" class="content" wx:if="{{type=='manager'&&tabsManager[0].checked}}">
+      <device/>
+  </view>
+
+  <view style="height:{{globalHeight}}rpx" class="content" wx:if="{{type=='manager'&&tabsManager[1].checked}}">
+      <order/>
+  </view>
+
+  <view style="height:{{globalHeight}}rpx" class="content" wx:if="{{type=='manager'&&tabsManager[2].checked}}">
+      <mine/>
+  </view>
+  <!--------------------------------------普通用户角色----------------------------------------->
+  <view  style="height:{{globalHeight}}rpx" class="content" wx:if="{{type=='normal'&&tabsNormal[0].checked}}">
+    <device/>
+
+  </view>
+
+  <view style="height:{{globalHeight}}rpx" class="content" wx:if="{{type=='normal'&&tabsNormal[1].checked}}">
+     <order/>
+  </view>
+  <view style="height:{{globalHeight}}rpx" class="content" wx:if="{{type=='normal'&&tabsNormal[2].checked}}">
+      <mine/>
+  </view>
+  <!-- <view class="content" wx:if="{{type=='normal'&&tabsNormal[0].checked}}">
+    <mine/>
+  </view>
+  <view class="content" wx:if="{{type=='normal'&&tabsNormal[1].checked}}">
+    <mine/>
+  </view>
+  <view class="content" wx:if="{{type=='normal'&&tabsNormal[2].checked}}">
+    <mine/>
+  </view> -->
+  <!-- 底部tabBar -->
+  <view class="bottom-tab">
+    <block wx:for="{{type=='manager'?tabsManager:tabsNormal}}" wx:key="" wx:for-index="idx" data-item="item">
+      <view bindtap="bindChange" class="tab-container" data-idx="{{idx}}">
+        <image src="{{item.checked ? item.selectedIcon : item.icon}}" class="left-img" mode="aspectFit" />
+        <view style="color:{{item.checked?'#1DABD9':'#999'}};font-size: 20rpx;">{{item.text}}</view>
+      </view>
+    </block>
+  </view>
+</view>

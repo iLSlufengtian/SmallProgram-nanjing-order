@@ -1,0 +1,114 @@
+<view class="container">
+  <view class="header" style="height:{{height}}rpx;z-index:9999">
+    <view style="width:100%;position:fixed;top:0;">
+      <nav-header title="设备列表" showBack="{{false}}" />
+      <view class="search">
+        <view class="sea-area">
+          <image class="sea-img" src="../../images/device/search.png" bindtap="goSearch" />
+          <input class="sea" bindinput="bindNumInput" value="{{num}}" placeholder="搜索资产号或设备编号" placeholder-class="input" bindconfirm="search" confirm-type="search"></input>
+          <image class="del-img" wx:if="{{num?true:false}}" src="../../images/device/del.png" bindtap="delInput" />
+        </view>
+      </view>
+    </view>
+
+  </view>
+
+  <view class="list-container" style="margin-top:{{height}}rpx"  >
+    <view class="left">
+      <block wx:for="{{deviceArr3}}" wx:key="">
+        <template is="Item" data="{{item}}" />
+      </block>
+    </view>
+    <view class="right">
+      <block wx:for="{{deviceArr4}}" wx:key="">
+        <template is="Item" data="{{item}}" />
+      </block>
+    </view>
+  </view>
+<!-- 
+  <view class="list-container" style="margin-top:{{height}}rpx"  wx:if="{{!roleName}}">
+   
+    <view class="left">
+      <block wx:for="{{deviceArr3}}" wx:key="">
+        <template is="Item1" data="{{item}}" />
+      </block>
+    </view>
+    <view class="right">
+      <block wx:for="{{deviceArr4}}" wx:key="">
+        <template is="Item1" data="{{item}}" />
+      </block>
+    </view>
+  </view> -->
+
+</view>
+
+<template name="Item" wx:if="{{roleName}}">
+  <view class="item-container">
+    <image class="dev-img" src="{{item.photoUrl}}" mode="aspectFill" data-id="{{item.deviceId}}" bindtap="goDetail" />
+    <view class="item">
+      <text class="text" bindtap="goDetail">{{item.name}}</text>
+      <view style="flex:1"></view>
+        <view wx:if="{{item.allowPowerOff}}" class="power">
+          <image data-proid="{{item.deviceId}}" class="power-img" src="{{item.allowPowerOff?'../../images/device/off.png':'../../images/device/dis_off.png'}}" bindtap="showModal1" data-res="{{item.allowPowerOff?0:1}}" />
+          <image data-proid="{{item.deviceId}}" class="power-img" src="{{item.allowPowerOff?'../../images/device/on.png':'../../images/device/dis_on.png'}}" bindtap="showModal" data-res="{{item.allowPowerOff?0:1}}" />
+          <!-- <image data-proid="{{item.deviceId}}" class="power-img"  src="../../images/device/off.png" bindtap="showModal1" />
+        <image data-proid="{{item.deviceId}}" class="power-img" src="../../images/device/on.png" bindtap="showModal" /> -->
+        </view>
+        <view wx:if="{{!item.allowPowerOff}}" class="power">
+          <image data-proid="{{item.deviceId}}" class="power-img" src="../../images/device/dis_off.png" />
+          <image data-proid="{{item.deviceId}}" class="power-img" src="../../images/device/dis_on.png" />
+        </view>
+    </view>
+  </view>
+</template>
+
+
+<!-- 
+<template name="Item1" wx:if="{{!roleName}}">
+  <view class="item-container">
+    <image class="dev-img" src="{{item.photoUrl}}" mode="aspectFill" data-id="{{item.assetsId}}" bindtap="goDetail2" />
+    <view class="item">
+      <text class="text" bindtap="goDetail2" >{{item.assetsName}}</text>
+      <view style="flex:1"></view>
+
+    </view>
+  </view>
+</template> -->
+
+<!-- custom Modal -->
+<view class="modal-mask" wx:if="{{showModal}}"></view>
+<view wx:if="{{showModal}}">
+  <view class="modal-photo">
+    <image class="start" src="../../images/device/power_on.png" />
+  </view>
+
+  <view class="modal-content">
+    <view class="view-text">
+      <text class="text1">是否需要通电处理</text>
+      <view style="flex:1"></view>
+      <view class='btns'>
+        <button class='btn1' bindtap="hideModal">取消</button>
+        <button class='btn2' bindtap="powerOn">确认</button>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- custom Modal -->
+<view class="modal-mask" wx:if="{{showModal1}}"></view>
+<view wx:if="{{showModal1}}">
+  <view class="modal-photo">
+    <image class="start" src="../../images/device/power_off.png" />
+  </view>
+
+  <view class="modal-content">
+    <view class="view-text">
+      <text class="text1">是否需要断电处理</text>
+      <view style="flex:1"></view>
+      <view class='btns'>
+        <button class='btn1' bindtap="hideModal1">取消</button>
+        <button class='btn2' bindtap="powerOff">确认</button>
+      </view>
+    </view>
+  </view>
+</view>

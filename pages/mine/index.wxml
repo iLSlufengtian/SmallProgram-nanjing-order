@@ -1,0 +1,69 @@
+<view class="container">
+  <view class="bg">
+
+    <view wx:if="{{!showImg}}"  style="width:100%;top:0;">
+      <nav-header title="个人中心" showBack="{{false}}" />
+    </view>
+
+    <view wx:if="{{showImg}}" style="width:100%;top:0;">
+      <nav-header title="个人中心" showBack="{{true}}" />
+    </view>
+
+    <view style="display:flex;width:100%;justify-content:center;">
+      <image style="width:124rpx;height:124rpx;" src="../../images/me/head.png" />
+    </view>
+  </view>
+
+  <view style="height:{{globalHeight-342}}rpx;width:100%;display:flex;justify-content:center;">
+    <view class="info-container">
+
+      <view class="item">
+        <view class="info-img">
+          <image style="width:28rpx;height:30rpx;margin-left:28rpx;" src="../../images/me/user.png" />
+        </view>
+        <view class="info-item">
+          <text class="text-view1">用户账户</text>
+          <text class="text-view2">{{userInfo.username}}</text>
+        </view>
+      </view>
+
+      <view class="item">
+        <view class="info-img">
+          <image style="width:28rpx;height:30rpx;margin-left:28rpx;" src="../../images/me/company.png" />
+        </view>
+        <view class="info-item">
+          <text class="text-view1">公司名称</text>
+          <text class="text-view2">{{userInfo.companyName}}</text>
+        </view>
+      </view>
+
+      <view class="item">
+        <view class="info-img">
+          <image style="width:28rpx;height:30rpx;margin-left:28rpx;" src="../../images/me/user.png" />
+        </view>
+        <view class="info-item">
+          <text class="text-view1">绑定手机</text>
+          <text class="text-view2">{{userInfo.mobile}}</text>
+        </view>
+      </view>
+
+      <view class="item">
+        <view class="info-img">
+          <image style="width:28rpx;height:30rpx;margin-left:28rpx;" src="../../images/me/me.png" />
+        </view>
+        <view class="info-item1">
+          <text class="text-view1">用户角色</text>
+          <text class="text-view2">{{name}}</text>
+        </view>
+      </view>
+    </view>
+
+
+    <!-- <view style="display:flex;width:100%;" bindtap="out">
+      <text style="font-size:26rpx;color:white">退出</text>
+    </view> -->
+  </view>
+
+
+
+</view>

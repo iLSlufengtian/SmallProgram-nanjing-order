@@ -1,0 +1,221 @@
+<!--pages/device/detail/index.wxml-->
+<!--pages/home/filter/index.wxml-->
+<view class="container">
+  <view style="width:100%;position:fixed;top:0;background-color:#273250;">
+    <nav-header title="预约详情" showBack="{{true}}" />
+  </view>
+
+  <!--  -->
+  <view class="con_max">
+    <image src="{{deviceData.photo?deviceData.photo:'../../../images/device/device01.png'}}" style="width:750rpx;height:608rpx"></image>
+    <!-- <image src="../../../images/device/device01.png" style="width:750rpx;height:416rpx"></image> -->
+
+    <view class="con_detail">
+      <view class="con_detail_box">
+        <!-- <view class="con_detail_left">
+          <view class="con_detail_left1">
+            <text>设备名称</text>
+            <text class="info_text">{{deviceData?deviceData.assetsName:""}}</text>
+          </view>
+          <view class="con_detail_left1">
+            <text>设备编号</text>
+            <text class="info_text">{{deviceData?deviceData.serialNo:''}}</text>
+          </view>
+
+          <view class="con_detail_left1">
+            <text>管理员</text>
+            <text class="info_text">{{deviceData?deviceData.owner:''}}</text>
+          </view>
+
+        </view> -->
+        <view class="con_top">
+          <view class="con_detail_left">
+            <view class="con_detail_left1">
+              <text>设备名称</text>
+              <text class="info_text">{{deviceData?deviceData.assetsName:""}}</text>
+            </view>
+          </view>
+          <view class="con_detail_right">
+            <view class="con_detail_right1">
+              <text>设备位置</text>
+              <text class="info_text">{{deviceData?deviceData.location:''}}</text>
+            </view>
+          </view>
+        </view>
+
+        <view class="con_top">
+          <view class="con_detail_left">
+            <view class="con_detail_left1">
+              <text>设备编号</text>
+              <text class="info_text">{{deviceData?deviceData.serialNo:''}}</text>
+            </view>
+          </view>
+          <view class="con_detail_right">
+            <view class="con_detail_right1">
+              <text>设备型号</text>
+              <text class="info_text">{{deviceData?deviceData.model:''}}</text>
+            </view>
+          </view>
+        </view>
+
+        <view class="con_top">
+          <view class="con_detail_left">
+            <view class="con_detail_left1">
+              <text>管理员</text>
+              <text class="info_text">{{deviceData?deviceData.owner:''}}</text>
+            </view>
+          </view>
+          <view class="con_detail_right">
+            <view class="con_detail_right1">
+              <text>费用</text>
+              <text class="info_text">{{deviceData?deviceData.amount:''}}元/h</text>
+            </view>
+          </view>
+        </view>
+        <!-- <view class="con_detail_right">
+          <view class="con_detail_right1">
+            <text>设备位置</text>
+            <text class="info_text">{{deviceData?deviceData.location:''}}</text>
+          </view>
+
+          <view class="con_detail_right1">
+            <text>设备型号</text>
+            <text class="info_text">{{deviceData?deviceData.model:''}}</text>
+          </view>
+
+          <view class="con_detail_right1">
+            <text>费用</text>
+            <text class="info_text">{{deviceData?deviceData.amount:''}}元/h</text>
+          </view>
+        </view> -->
+      </view>
+    </view>
+
+    <view class="order_box">
+      <!-- 当前预约 -->
+      <view class="order_left">
+        <view class="order_title">
+          <image src="../../../images/device/currentState.png" style="width:30rpx;height:30rpx;margin-top:4rpx;margin-right:12rpx"></image>
+          <text class="order_text">当前状态</text>
+        </view>
+        <!-- 在这里对管理员和普通用户进行区分 -->
+        <view wx:if="{{roleName}}" class="order_left_box">
+          <view style="height:60rpx;display:flex;align-items:center">
+            <text class="order_text">{{enableSharing?'可预约':'不可预约'}}</text>
+            <switch checked="{{enableSharing}}" bindchange="switchChange" />
+          </view>
+        </view>
+        <view wx:if="{{!roleName}}" class="order_left_box">
+          <view style="height:60rpx;display:flex;align-items:center">
+            <image src="../../../images/device/orderLogo.png" style="width:30rpx;height:30rpx;margin-right:12rpx"></image>
+            <text class="order_text">可预约</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 预约时间 -->
+      <view class="order_right">
+        <view class="order_title">
+          <image src="../../../images/device/orderTime.png" style="width:30rpx;height:30rpx;margin-top:4rpx;margin-right:12rpx"></image>
+          <text class="order_text">预约时间</text>
+        </view>
+        <view class="order_left_box" style="flex-direction:column" bindtap='showSlectModal'>
+          <text style="color:#6A7086;font-size:26rpx">{{timeStr}}</text>
+          <text style="color:#F4F4F4;font-size:30rpx">{{timeStr1}}</text>
+          <text style="color:#F4F4F4;font-size:30rpx">{{timeStr2}}</text>
+        </view>
+      </view>
+
+    </view>
+
+    <!-- 立即预约 -->
+    <view style="position:fixed;bottom:30rpx;width:92%;margin:0 30rpx">
+      <button style="color:#F4F4F4;font-size:30rpx;background:#1DABD9;" bindtap="doOrderDevice">立即预约</button>
+    </view>
+
+    <view class="cover_screen" bindtap="hideDelModal" wx:if="{{showModal}}"></view>
+    <view animation="{{animationData}}" class="modal" wx:if="{{showModal}}">
+      <view wx:if="{{showTimeSlot}}" class="content-container" style="height:{{windowHeight*0.83}}rpx">
+        <view class="modal_title">
+          <text style="font-size: 30rpx;color: #3E3E3E;font-weight:500;">{{roomName}}</text>
+          <view class="img-con" bindtap="closeTimeSelect">
+            <image src="/images/common/close.png" style="width:27rpx;height: 27rpx;" mode="aspectFit" />
+          </view>
+        </view>
+
+        <view class="day_wrapper">
+          <view class="previous" style="margin-left:20rpx;background-color:{{preGray?'#efefef':'white'}}" bindtap='onTapPre'>
+            <text style="font-size:30rpx;color:#666;">前一天 </text>
+          </view>
+          <view class="middle" bindtap='showCalendar'>
+            <!-- <text style="font-size:20rpx;color:#666;">周四 </text> -->
+            <text style="font-size:30rpx;color:#666;">{{currentDay}}</text>
+            <image src="/images/common/shit.png" style="width:40rpx;height:24rpx;" mode="aspectFit" />
+          </view>
+          <view class="previous" style="margin-right:20rpx;background-color:{{afterGray?'#efefef':'white'}}" bindtap='onTapAft'>
+            <text style="font-size:30rpx;color:#666;">后一天 </text>
+          </view>
+        </view>
+        <!-- <view class="sekuai">
+          <image src="/images/order/grayLogo.png" style="width:25rpx;height:24rpx;" mode="aspectFit" />
+          <text style="font-size:20rpx;color:#8E8E8E;">已预约 </text>
+          <image src="/images/order/greenLogo.png" style="width:25rpx;height:24rpx;margin-left:20rpx;" mode="aspectFit" />
+          <text style="font-size:20rpx;color:#8E8E8E;">我的预约 </text>
+        </view> -->
+
+        <scroll-view scroll-y style="height:728rpx;flex:1;">
+          <view wx:for="{{timeSlot}}" wx:key="{{index}}" data-item="item">
+            <view class="item-wrapper" bindtap="onTapTimes" data-index="{{index}}">
+              <image src="{{item.imageSource}}" class="itemicon" mode="aspectFit"></image>
+              <view class="right-wrapper">
+                <text style="font-size:30rpx;color:#3E3E3E;">{{item.timeList}}</text>
+                <text wx:if="{{roleType =='manager'}}" style="font-size:30rpx;color:#3E3E3E;margin-right:30rpx;">{{item.company}}</text>
+              </view>
+            </view>
+          </view>
+        </scroll-view>
+
+        <view class='bottom-btn' style="margin-bottom:15rpx;margin-top:10rpx;">
+          <view class='text-btn' bindtap="confirmTimeSelect">确定</view>
+        </view>
+      </view>
+      <view wx:if="{{showCalendar}}" class="content-container" style="height:{{windowHeight*0.83}}rpx">
+        <calendar width="{{windowWidth}}" height="{{windowHeight*0.83}}" bind:myevent="hideCalendar" date="{{currentDay}}" roomtype="" />
+      </view>
+    </view>
+
+  </view>
+
+</view>
+
+
+<view class='tip-content-dialog' wx:if="{{showModalX}}">
+  <!-- <text class='dialogClose block tc font24 white' bindtap='closerule'>×</text> -->
+  <view class="tip-dialog-view">
+    <view class="tip-dialog-viewTop">
+      <text>活动规则</text>
+    </view>
+    <scroll-view class="tip-dialog-viewScroll" scroll-y='true'>
+
+      <view>
+        <text decode="{{true}}" style='display:block;padding-top:10rpx;'>1、预约者需自行携带待检测样本，预约者应对提供的样品和相关检测资料的合法性、真实性、完整性负责；</text>
+        <text style='display:block;padding-top:10rpx;padding-left:0rpx;'>2、预约者应保证上机样本为合格或满足机器要求，预约者对送检样品中不得包含任何如强挥发、放射性、有毒、腐蚀性、爆炸性或农、兽药原药样品，若预约者不遵守规定，由此直接或间接导致乙方或其他任何第三方损失的，责任均由预约者承担；如因预约者原因导致乙方向第三人承担了赔偿责任，则预约者应当双倍向乙方支付乙方已付给第三人的赔偿数额；</text>
+        <text style='display:block;padding-top:20rpx;' decode="{{true}}">3、预约者需严格按照乙方规定或建议的服务流程操作，否则若因预约者原因出现机器故障或实验失败，预约者需负全部责任并承担维修费用；</text>
+        <text style='display:block;padding-top:10rpx;padding-left:0rpx;'>4、操作完成后，当天预约者自行拷贝实验的原始数据，若因拷贝不及时导致结果丢失的情况，乙方不承担任何责任；</text>
+        <text style='display:block;padding-top:10rpx;padding-left:0rpx;'>5、实验前建议阅读网站中“管理制度”内相关文件。</text>
+        <text style='display:block;padding-top:10rpx;padding-left:0rpx;'>6、预约后点击官网右上角用户名进入个人中心提交预约仪器汇总单。</text>
+        <text style='display:block;padding-top:10rpx;padding-left:0rpx;'>7、若有疑问请进入官网“联系我们”页面中与相关联系人取得联系。</text>
+      </view>
+    </scroll-view>
+    <view class="bottom_button">
+      <view style="width:50%;height:88rpx;float:left;display:flex;align-items:center;justify-content:center;">
+        <button bindtap="goCancel" style="width:100%;background:#F5F5F5;padding:0;border-radius:0 0 0 20rpx">取消</button>
+      </view>
+      <view style="width:50%;height:88rpx;float:right;display:flex;align-items:center;justify-content:center;">
+
+        <button bindtap="onConfimModal" disabled="{{ifClick}}" style="width:100%;background:#C7C7C7;padding:0;border-radius:0 0 20rpx 0">{{sendTime}}</button>
+      </view>
+    </view>
+
+  </view>
+</view>

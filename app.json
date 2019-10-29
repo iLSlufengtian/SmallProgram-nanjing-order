@@ -1,0 +1,21 @@
+{
+  "pages": [
+    "pages/authorization/index",
+    "pages/mine/index",
+    "pages/login/login",
+    "pages/home/index",
+    "pages/Mhome/index",
+    "pages/device/index",
+    "pages/device/detail/index",
+    "pages/order/index",
+    "pages/index"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "",
+    "navigationBarTitleText": "",
+    "navigationBarTextStyle": "white",
+    "navigationStyle": "custom"
+  },
+  "sitemapLocation": "sitemap.json"
+}

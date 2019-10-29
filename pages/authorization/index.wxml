@@ -1,0 +1,6 @@
+  <view class="page">
+    <web-view src="{{url}}" bindload="onbindload"></web-view>
+    <!-- <view style="height:200rpx;margin-top:100rpx">
+    <text style="margin-top:100rpx" bindtap="onbindload">sass</text></view> -->
+    
+  </view>

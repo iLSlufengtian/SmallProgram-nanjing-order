@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "device":"./device/index",
+    "order":"./order/index",
+    "mine":"./mine/index",
+    "home":"./home/index"
+  }
+}

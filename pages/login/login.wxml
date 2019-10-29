@@ -1,0 +1,51 @@
+<view class="container">
+  <view class="login_bg">
+    <view style="display:flex;width:100%;margin-top:{{height}}rpx;justify-content:center">
+      <text style="font-size:48rpx;color:#E4EFFF">设备预约</text>
+    </view>
+    <view class="login">
+
+      <view class="phone">
+        <view class="fir">
+          <text style="margin-left:8rpx;font-size:32rpx;color:#808080">+86</text>
+        </view>
+        <view class="sec">
+          <input class="input" value="{{phone}}" placeholder-class="holder-input" placeholder="请输入您的手机号码" bindinput='bindTelInput'></input>
+        </view>
+      </view>
+
+      <view class="yzm">
+        <image style="width:32rpx;height:40rpx;margin-top:40rpx" src="../../images/login/psw.png" />
+        <input style="margin-left:30rpx;margin-top:40rpx" class="input" value="{{yzm}}" placeholder-class="holder-input" placeholder="请输入验证码" bindinput="bindYzmInput"></input>
+        <!-- <image style="width:220rpx;height:72rpx;margin-top:14rpx;" src="../../images/login/yzm.png" bindtap="getYzm" /> -->
+        <button wx:if="{{btnYzm}}" class="btn-yzm" bindtap="getYzm">获取验证码</button>
+        <button wx:if="{{!btnYzm}}" class="btn-yzm1">{{btnText}}</button>
+
+
+      </view>
+
+      <view class="btn" bindtap="login"></view>
+    </view>
+  </view>
+</view>
+
+
+<!-- custom Modal -->
+  <view class="modal-mask" wx:if="{{showModal}}"></view>
+  <view wx:if="{{showModal}}">
+    <view class="modal-photo">
+      <image class="start" src="../../images/home/dp.png" />
+    </view>
+
+    <view class="modal-content">
+      <view class="view-text">
+        <text class="text">暂无该用户，请到官网注册</text>
+      </view>
+      <view class='btns'>
+        <button class='btn1' bindtap="hideModal">取消</button>
+        <navigator class='btn2' open-type="exit" target="miniProgram">
+            <text style="font-size:32rpx;color:white">退出</text>
+        </navigator>
+      </view>
+    </view>
+  </view>

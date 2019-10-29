@@ -1,0 +1,82 @@
+<view class="container">
+
+  <view class="bg">
+    <image wx:if="{{isAppoint}}" style="width:180rpx;height:188rpx;margin-top:{{height1}}rpx" src="../../images/home/clock.png" />
+    <image wx:if="{{!isAppoint}}" style="width:182rpx;height:150rpx;margin-top:{{height2}}rpx" src="../../images/home/noAppoint.png" />
+    <text wx:if="{{isAppoint}}" class="appoint">{{startTime}}~{{endTime}}</text>
+    <view wx:if="{{isAppoint}}" class="text-view">
+      <text style="font-size:24rpx;color: #7C8EDA;">您预约的时间段</text>
+    </view>
+    <view wx:if="{{!isAppoint}}" class="text-view1">
+      <text style="font-size:24rpx;color: #FF6B6B;">您暂未预约该台设备</text>
+    </view>
+  </view>
+
+  <view class="btn-view" style="height:{{globalHeight-480}}rpx">
+    <image wx:if="{{!power}}" style="width:346rpx;height:346rpx;margin-top:106rpx" src="../../images/home/start.png" bindtap="clickBtn" />
+    <image wx:if="{{power}}" style="width:346rpx;height:346rpx;margin-top:106rpx" src="../../images/home/end.png" bindtap="clickBtn" />
+    <text wx:if="{{!power}}" style="font-size:24rpx;color:#4B5C9C;margin-top:30rpx">点击按钮开始使用设备</text>
+    <text wx:if="{{power}}" style="font-size:24rpx;color:#4B5C9C;margin-top:30rpx">点击按钮停止使用设备</text>
+    <image class="me" src="../../images/home/me.png" bindtap="goToHome" />
+  </view>
+
+  <!-- custom Modal -->
+  <view class="modal-mask" wx:if="{{showModal}}"></view>
+  <view wx:if="{{showModal}}">
+    <view class="modal-photo">
+      <image class="start" src="../../images/home/on.png" />
+    </view>
+
+    <view class="modal-content">
+      <view class="view-text">
+        <text class="text">确认开始使用该台设备吗？</text>
+        <view style="flex:1"></view>
+        <view class='btns'>
+          <button class='btn1' bindtap="hideModal">取消</button>
+          <button class='btn2' bindtap="powerOn">确认</button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- custom Modal -->
+  <view class="modal-mask" wx:if="{{showModal1}}"></view>
+  <view wx:if="{{showModal1}}">
+    <view class="modal-photo">
+      <image class="start" src="../../images/home/off.png" />
+    </view>
+
+    <view class="modal-content">
+      <view class="view-text">
+        <text class="text">确认结束使用该台设备吗？</text>
+        <view style="flex:1"></view>
+        <view class='btns'>
+          <button class='btn1' bindtap="hideModal1">取消</button>
+          <button class='btn2' bindtap="powerOff">确认</button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- custom Modal -->
+  <view class="modal-mask" wx:if="{{showModal2}}"></view>
+  <view wx:if="{{showModal2}}">
+    <view class="modal-photo">
+      <image class="start" src="../../images/home/dp.png" />
+    </view>
+
+    <view class="modal-content">
+      <view class="view-text">
+        <text class="text">还未到预约时间，暂不能使用设备</text>
+        <view style="flex:1"></view>
+        <view class='btns'>
+          <button class='btn1' bindtap="hideModal2">取消</button>
+          <button class='btn2' bindtap="hideModal2">知道了</button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+
+
+</view>

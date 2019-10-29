@@ -1,0 +1,29 @@
+<!-- <view class="container"> -->
+
+  <view class="bg">
+    <view class="dev-bg" style="margin-top:{{height}}rpx">
+      <view class="img">
+        <image style="width:130rpx;height:130rpx;" src="{{imgUrl}}" />
+      </view>
+    </view>
+    <text class="appoint">{{device[0].name}}</text>
+  </view>
+
+  <!-- <view class="btn-view" style="height:{{globalHeight-480}}rpx"> -->
+  <view class="btn-view">
+    <view class="btn-container">
+      <view class="btn" bindtap="powerOff">
+        <image style="width:188rpx;height188rpx;margin-top:184rpx;" src="../../images/device/powerOff.png" />
+        <text style="font-size:24rpx;color:#4B5C9C;margin-top:16rpx">断电</text>
+      </view>
+
+      <view class="btn" bindtap="powerOn">
+        <image style="width:188rpx;height188rpx;margin-top:184rpx;" src="../../images/device/powerOn.png" />
+        <text style="font-size:24rpx;color:#6DCFEF;margin-top:16rpx">通电</text>
+      </view>
+
+    </view>
+    <image class="me" src="../../images/device/icon.png" bindtap="goToHome" />
+  </view>
+
+<!-- </view> -->
