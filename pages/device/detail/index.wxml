@@ -28,6 +28,7 @@
           </view>
 
         </view> -->
+        <!-- <view class="con_top" bindtap="testClick"> -->
         <view class="con_top">
           <view class="con_detail_left">
             <view class="con_detail_left1">
@@ -107,8 +108,9 @@
         </view>
         <view wx:if="{{!roleName}}" class="order_left_box">
           <view style="height:60rpx;display:flex;align-items:center">
-            <image src="../../../images/device/orderLogo.png" style="width:30rpx;height:30rpx;margin-right:12rpx"></image>
-            <text class="order_text">可预约</text>
+            <image wx:if="{{enableSharing}}" src="../../../images/device/orderLogo.png" style="width:30rpx;height:30rpx;margin-right:12rpx"></image>
+            <image wx:if="{{!enableSharing}}"  src="../../../images/device/orderLogo2.png" style="width:30rpx;height:30rpx;margin-right:12rpx"></image>
+            <text class="order_text">{{enableSharing?'可预约':'不可预约'}}</text>
           </view>
         </view>
       </view>
@@ -129,8 +131,11 @@
     </view>
 
     <!-- 立即预约 -->
-    <view style="position:fixed;bottom:30rpx;width:92%;margin:0 30rpx">
-      <button style="color:#F4F4F4;font-size:30rpx;background:#1DABD9;" bindtap="doOrderDevice">立即预约</button>
+    <view style="position:fixed;bottom:30rpx;width:92%;margin:0 30rpx" wx:if="{{enableSharing}}">
+      <button style="color:#F4F4F4;font-size:30rpx;background:#1DABD9;" bindtap="doOrderDevice">预约</button>
+    </view>
+    <view style="position:fixed;bottom:30rpx;width:92%;margin:0 30rpx" wx:if="{{!enableSharing}}">
+      <button style="color:#F4F4F4;font-size:30rpx;background: #B1B1B1;" >预约</button>
     </view>
 
     <view class="cover_screen" bindtap="hideDelModal" wx:if="{{showModal}}"></view>
@@ -184,6 +189,25 @@
       </view>
     </view>
 
+
+    <!-- <view class="modal-mask" wx:if="{{showModalT}}"></view>
+    <view wx:if="{{showModalT}}">
+      <view class="modal-photo">
+        <image class="start" src="../../../images/home/dp.png" />
+      </view>
+
+      <view class="modal-content">
+        <view class="view-text">
+          <text class="text">此设备暂不能预约</text>
+          <view style="flex:1"></view>
+          <view class='btns'>
+            <button class='btn1' bindtap="hideModalT">取消</button>
+            <button class='btn2' bindtap="hideModalT">知道了</button>
+          </view>
+        </view>
+      </view>
+    </view> -->
+
   </view>
 
 </view>
@@ -213,7 +237,8 @@
       </view>
       <view style="width:50%;height:88rpx;float:right;display:flex;align-items:center;justify-content:center;">
 
-        <button bindtap="onConfimModal" disabled="{{ifClick}}" style="width:100%;background:#C7C7C7;padding:0;border-radius:0 0 20rpx 0">{{sendTime}}</button>
+        <button bindtap="onConfimModal" disabled="{{ifClick}}" style="width:100%;background:#C7C7C7;padding:0;border-radius:0 0 20rpx 0" wx:if="{{sendTime!==88}}">{{sendTime}}</button>
+        <button bindtap="onConfimModal" disabled="{{ifClick}}" style="width:100%;background:#5266A9;padding:0;border-radius:0 0 20rpx 0;color:#FFFFFF" wx:if="{{sendTime==88}}">立即预约</button>
       </view>
     </view>
 

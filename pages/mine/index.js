@@ -68,6 +68,9 @@ Component({
               case "USER_DEPARTMENT_MANAGER":
                 username = '公司管理员';
                 break;
+              case "USER_DEVICE_OWNER":
+                username = '设备管理员';
+                break;
               case "USER_DEVICE_OPERATOR":
                 username = '设备使用者';
                 break;

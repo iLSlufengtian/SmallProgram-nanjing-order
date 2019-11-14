@@ -11,6 +11,7 @@ Page({
     globalHeight: getApp().globalData.windowHeight,
     scene: getApp().globalData.scene,
     device: [],
+    deviceId:null,
     imgUrl: 'http://i3.sinaimg.cn/ty/k/2010-09-07/U4933P6T12D5189535F44DT20100907150724.jpg'
   },
 
@@ -71,7 +72,10 @@ Page({
           }
           that.setData({
             device: res.data,
+            deviceId: res.data[0].deviceId
           })
+        }else {
+          that.queryDeviceId();
         }
       }, function (error) {
         wx.showToast({
@@ -83,7 +87,37 @@ Page({
       }
     )
   },
-
+  //没有预约，查询设备id
+  queryDeviceId: function () {
+    var that = this;
+    var conf = {
+      method: "GET",
+      urlParams: true,
+      params: {
+        serialNo: app.globalData.serial,
+        bizType: app.globalData.bizType,
+        key: app.globalData.key,
+        // serialNo: 'NJBPS'+that.data.id
+      }
+    };
+    NetworkService.call("queryDeviceId", conf,
+      function (res) {
+        if (res && res.code == 0) {
+          var data = res.data;
+          that.setData({
+            deviceId: data.deviceId
+          })
+        } else {
+          wx.showToast({
+            title: res.message,
+          });
+        }
+      },
+      function (error) {
+        wx.hideLoading();
+      }
+    )
+  },
   powerOn: function () {
     var that = this
     wx.showLoading({
@@ -92,7 +126,6 @@ Page({
     that.setData({
       showModal: false
     })
-    console.log(that.data.deviceId)
     var conf = {
       method: "POST",
       urlParams: true,
@@ -187,6 +220,13 @@ Page({
     wx.redirectTo({ 
       url: '/pages/index?roleType=manager',
     })
-  }
+  },
+  goToOrder: function () {
+    var that = this;
+    // app.globalData.scene = 1001;
+    wx.navigateTo({
+      url: '/pages/device/detail/index?id=' + that.data.deviceId,
+    })
+  },
 
 })

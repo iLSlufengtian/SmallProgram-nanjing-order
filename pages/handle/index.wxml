@@ -1,0 +1,151 @@
+<!--pages/order/index.wxml-->
+<!-- <view style="width:100%;height:1200rpx;background:#1f2849"> -->
+<view class="container">
+
+  <view style="width:100%;position:fixed;top:0;background-color:#273157">
+    <nav-header title="审核操作 " showBack="{{false}}" />
+  </view>
+
+
+  <custom-scroll pulldownDistance="100" refreshPulldownText="再往下拉试试" refreshUndoText="松开试试" refreshLoadingText="努力刷新中~" loadmoreLoadingText="正在从库里捞数据" loadmoreAllloadedText="取之不尽,用之完矣" bind:_refresh="refresh" id="manageren">
+
+    <!-- <view class="remind">
+      <view style="display:flex;flex-direction:row;justify-content:center;height:60rpx;align-items:center">
+        <image src="/images/order/remind.png" class="img-remind" />
+        <text class="text-view">开始前30分钟内将无法取消</text>
+      </view>
+    </view> -->
+
+
+    <!-- 循环遍历 -->
+    <view class="tab-container">
+      <view class="segmentedControl">
+        <block wx:for="{{radioValues}}" wx:key="" wx:for-index="idx" data-item="item">
+          <text style="background-color:{{item.selected?'#1DABD9':'#273250'}};color:{{item.selected?'#FFFFFF':'#1DABD9'}};border-top-left-radius:{{idx==0?8:0}}rpx;border-bottom-left-radius:{{idx==0?8:0}}rpx;border-top-right-radius:{{idx==1?8:0}}rpx;border-bottom-right-radius:{{idx==1?8:0}}rpx; border-right:{{(idx==0)?0:1}}px solid #1DABD9;"
+            data-index="{{idx}}" bindtap="indexChanged">{{item.value}}</text>
+        </block>
+      </view>
+    </view>
+
+
+
+
+    <view class='finish' wx:if='{{radioValues[0].selected===true}}'>
+      <block wx:for="{{finishedDatas}}" wx:key="" wx:for-index="index" data-item="item">
+        <!-- <template is="itemone" data="{{item:item,idx:index,type:'0'}}" /> -->
+        <template is="itemon" data="{{item:item,idx:index,type:'0'}}" wx:if="{{!judgeUser}}" />
+        <template is="itemone" data="{{item:item,idx:index,type:'0'}}" wx:if="{{judgeUser}}" />
+
+      </block>
+      <view class="empty-container" wx:if='{{finishedDatas.length==0 && dataLoaded}}'>
+        <image src="/images/order/noData.png" class="empty-img" />
+        <text class="empty-text">暂无信息</text>
+      </view>
+    </view>
+
+    <view class='finish' wx:if='{{radioValues[1].selected===true}}'>
+      <block wx:for="{{openDatas}}" wx:key="" wx:for-index="index" data-item="item">
+      
+        <template is="itemtwo" data="{{item:item,idx:index,type:'1'}}" wx:if="{{!judgeUser}}" />
+        <template is="itemthree" data="{{item:item,idx:index,type:'1'}}" wx:if="{{judgeUser}}" />
+      </block>
+      <view class="empty-container" wx:if='{{openDatas.length==0}}'>
+        <image src="/images/order/noData.png" class="empty-img" />
+        <text class="empty-text">暂无信息</text>
+
+
+      </view>
+    </view>
+
+    <!-- <view class='finish' wx:if='{{radioValues[2].selected===true}}'>
+      <block wx:for="{{processingDatas}}" wx:key="" wx:for-index="index" data-item="item">
+        <template is="itemthree" data="{{item:item,idx:index,type:'2'}}" />
+      </block>
+      <view class="empty-container" wx:if='{{processingDatas.length==0}}'>
+        <image src="/images/order/noData.png" class="empty-img" />
+        <text class="empty-text">暂无信息</text>
+      </view>
+    </view> -->
+
+
+  </custom-scroll>
+
+
+</view>
+
+
+
+<!--  下面modal模块 -->
+<template name="itemon" >
+  <view class="cell-con" style='height:200rpx;margin-bottom:40rpx;' data-taskid="{{item.id}}" data-type="{{type}}" bindtap="goHandleDetail">
+    <view class="top-title">
+      <text style="font-size:32rpx;color:#EBEFFC;padding-left:20rpx">{{item.enterpriseName}}</text>
+      <text style='font-size:22rpx;color:#CE4A4A;padding-right:20rpx;'>待审核</text>
+    </view>
+    <view class="bottom-container">
+      <text>企业类型: {{item.enterpriseType}}</text>
+      <text>手机号：{{item.phone}}</text>
+    </view>
+    <!-- <view style="font-size:26rpx;color:#3400CE;width:100%;height:63rpx;padding-top:5rpx;padding-bottom:5rpx;" bindtap="clickcancelOrdered1" data-leaseid="{{item.leaseId}}"  data-cancelable0="{{item.cancelAble0}}" data-idx="{{idx}}"   data-deviceid="{{item.deviceId}}" data-startTime="{{item.startTime}}" data-finishTime="{{item.finishTime}}" >
+        
+        <text class="cancelOrder" style="color:{{item.cancelAble0?'#3400CE':'#8E8E8E'}}" >取消预订</text>
+       
+    </view> -->
+  </view>
+</template>
+<!--  下面modal模块 -->
+<template name="itemone" >
+
+  <view class="cell-con" style='height:258rpx;margin-bottom:40rpx;'data-taskid="{{item.id}}" data-type="{{type}}">
+    <view class="top-title">
+      <text style="font-size:32rpx;color:#EBEFFC;padding-left:20rpx">{{item.userName}}</text>
+    </view>
+    <view style="flex:1;border-bottom:1rpx solid #343e65;display:flex;flex-direction:column;justify-content:space-between;padding: 12rpx 0rpx 12rpx 20rpx;color:#999FB7;font-size:28rpx;">
+      <text>所在公司: {{item.enterpriseName}}</text>
+      <text>手机号：{{item.phone}}</text>
+    </view>
+    <view style="font-size:26rpx;color:#3400CE;width:100%;height:64rpx;padding-top:5rpx;padding-bottom:5rpx;display:flex">
+
+      <!-- <text class="cancelOrder" style="color:{{item.cancelAble0?'#3400CE':'#8E8E8E'}}" >取消预订</text> -->
+      <view style="width:49%;height:100%;border-right:1rpx solid #343e65;display:flex;justify-content:center;align-items:center" data-bid="{{item.id}}"  data-buid="{{item.uid}}"  bindtap="goDisagree">
+        <text style="color:#CE4A4A">拒绝申请</text>
+      </view>
+      <view style="width:49%;height:100%;display:flex;justify-content:center;align-items:center" data-aid="{{item.id}}" data-auid="{{item.uid}}"   bindtap="goAgree">
+        <text style="color:#40AB54">同意申请</text>
+      </view>
+
+    </view>
+  </view>
+</template>
+
+
+
+<!--  下面modal模块 -->
+<template name="itemtwo">
+  <view class="cell-con" style='height:200rpx;margin-bottom:40rpx;' data-taskid="{{item.id}}" data-type="{{type}}">
+    <view class="top-title">
+      <text style="font-size:32rpx;color:#EBEFFC;padding-left:20rpx">{{item.enterpriseName}}</text>
+      <text style='font-size:22rpx;color:#3BBB53;padding-right:20rpx;' wx:if="{{item.auditStatus==1}}">已同意</text>
+      <text style='font-size:22rpx;color:#CE4A4A;padding-right:20rpx;' wx:if="{{item.auditStatus==2}}">已拒绝</text>
+    </view>
+    <view class="bottom-container">
+      <text>企业类型: {{item.enterpriseType}}</text>
+      <text>手机号：{{item.phone}}</text>
+    </view>
+  </view>
+</template>
+
+<!--  下面modal模块 个人-->
+<template name="itemthree">
+  <view class="cell-con" style='height:200rpx;margin-bottom:40rpx;' data-taskid="{{item.id}}" data-type="{{type}}">
+    <view class="top-title">
+      <text style="font-size:32rpx;color:#EBEFFC;padding-left:20rpx">{{item.userName}}</text>
+      <text style='font-size:22rpx;color:#3BBB53;padding-right:20rpx;' wx:if="{{item.auditStatus==1}}">已同意</text>
+      <text style='font-size:22rpx;color:#CE4A4A;padding-right:20rpx;' wx:if="{{item.auditStatus==2}}">已拒绝</text>
+    </view>
+    <view class="bottom-container">
+      <text>所在公司: {{item.enterpriseName}}</text>
+      <text>手机号：{{item.phone}}</text>
+    </view>
+  </view>
+</template>

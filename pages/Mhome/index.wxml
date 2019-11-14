@@ -23,7 +23,15 @@
       </view>
 
     </view>
-    <image class="me" src="../../images/device/icon.png" bindtap="goToHome" />
+    <!-- <image class="me" src="../../images/device/icon.png" bindtap="goToHome" /> -->
+      <view style="width:100%;height:110rpx;position:fixed;bottom:0;left:0;display:flex">
+    <view style="width:46%;height:80rpx;margin-left:3%;margin-right:2%;border:1rpx solid #1CB2E3;color:#1CB2E3;font-size:30rpx;display:flex;justify-content:center;align-items:center" bindtap="goToHome">
+      <text>返回首页</text>
+    </view>
+    <view style="width:46%;height:80rpx;background:#1CB2E3; border:1rpx solid #1CB2E3;font-size:30rpx;display:flex;justify-content:center;align-items:center" bindtap="goToOrder">
+      <text>预约此设备</text>
+    </view>
+  </view>
   </view>
 
 <!-- </view> -->

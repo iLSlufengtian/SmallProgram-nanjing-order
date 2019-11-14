@@ -26,6 +26,10 @@ const urlMap = {
   "orderDevice": "customer/assets/{id}/lease",  //创建预约  "POST"
   "changeOrderStatus":"customer/assets/share/setting",  //修改设备预约状态  "PUT"
   "orderDeviceList": "customer/assets/info", //查询可预约设备
+  "queryAudit": "audit",   //获取审核列表
+  "auditDetail": "audit/enterprise/{id}",  //获取企业审核详情
+  "startAudit": "audit/start?bizType={bizType}&key={key}&type={type}&uid={uid}&id={id}&status={status}", //审核  POST
+  "queryDeviceId": "customer/device/{serialNo}", //扫码查询当前设备id
 
 };
 const urlHelper = {

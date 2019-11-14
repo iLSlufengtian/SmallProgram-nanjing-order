@@ -4,10 +4,10 @@ var Utils = require("../../utils/util.js")
 
 
 Component({
-  properties: {
-
-  },
+  properties: {},
   data: {
+    deviceArr1: [],
+    deviceArr2: [],
     deviceArr3:[],
     deviceArr4:[],
     isIpx: getApp().globalData.isIpx,
@@ -20,36 +20,38 @@ Component({
     len:'',
     roleName: null,
     userId:null,
+    page:0,
+    size:20,
   },
   lifetimes:{
     created:function(){
       var that = this
-
-       wx.getStorage({
-      key: 'userInfo',
-      success: function (res) {
-        if (res && res.data) {
-          console.log(res)
-          that.setData({
-            userId: res.data.id,
-            roleName: res.data.roleName == 'USER_BASIC_VIEW' ? false : true
-          },()=>{
-            // if(that.data.roleName==false){
-            //   console.log('普通')
-              that.getOrderDevice()
-            // }else {
-            //   console.log('不普通')
-              // that.getDevice();
-            // }
-          })
-        }
-      }
-    })
+      that.getDevice();
+    //   wx.getStorage({
+    //   key: 'userInfo',
+    //   success: function (res) {
+    //     if (res && res.data) {
+    //       that.setData({
+    //         userId: res.data.id,
+    //         roleName: res.data.roleName == 'USER_BASIC_VIEW' ? false : true
+    //       },()=>{
+    //         //  if(that.data.roleName==false){
+    //         //    console.log('普通')
+    //         //   that.getOrderDevice()
+    //         //  }else{
+    //         //    console.log('不普通1')
+    //            that.getDevice();
+    //         //  }
+    //       })
+    //     }
+    //   }
+    // })
     },
   },
-  ready: function () { 
+  ready: function(){ 
     // console.log("萨基")
-    // var that = this;
+    var that = this;
+    that.getDevice();
     // wx.getStorage({
     //   key: 'userInfo',
     //   success: function (res) {
@@ -58,6 +60,10 @@ Component({
     //       that.setData({
     //         userId: res.data.id,
     //         roleName: res.data.roleName == 'USER_BASIC_VIEW' ? false : true
+    //       }, () => {
+  
+    //           that.getDevice();
+  
     //       })
     //     }
     //   }
@@ -70,7 +76,18 @@ Component({
         showModal: false
       });
     },
+    // onPullDownRefresh: function () {
+    //   console.log("下拉刷新");
 
+    // },
+    // onReachBottom: function () {
+    //   console.log('到底了')
+    //   // if (this.data.isMore) {
+    //   //   this.searchScrollLower()
+    //   // } else {
+    //   //   util.showErrorToast('没有更多数据')
+    //   // }
+    // },
     hideModal1: function (e) {
       var that = this
       that.setData({
@@ -151,63 +168,7 @@ Component({
       // }
       console.log('刷新')
     },
-    getOrderDevice: function(){
-      var that = this;
-      var conf = {
-        method: "GET",
-        params: {
-          bizType: app.globalData.bizType,
-          userId: that.data.userId,
-        }
-      };
-      NetworkService.call("orderDeviceList", conf,
-        function (res) {
-          console.log(res)
-          if (res && res.code == 0) {
-            var arr = res.data
-            if (arr.length < 5 && arr.length !== 0) {
-              that.setData({
-                len: "container1",
-              })
-            } else {
-              that.setData({
-                len: "container",
-              })
-            }
-            if (!Utils.isEmptyArr(arr)) {
-              let arr1 = [];
-              let arr2 = [];
-              for (let i = 0; i < arr.length; i++) {
-                if (i % 2 == 0) {
-                  arr1.push(arr[i])
-                } else {
-                  arr2.push(arr[i])
-                }
-              }
-              for (let index in arr1) {
-                if (arr1[index].photoUrl == null) {
-                  arr1[index].photoUrl = "../../images/device/device.png"
-                }
-              }
-              for (let index in arr2) {
-                if (arr2[index].photoUrl == null) {
-                  arr2[index].photoUrl = "../../images/device/device.png"
-                }
-              }
-              that.setData({
-                deviceArr3: arr1,
-                deviceArr4: arr2,
-              });
-            } 
-          } else {
-              wx.showToast({
-                title: '未查找到数据',
-                icon: 'none'
-              })
-            }
-          }
-      )
-    },
+ 
     getDevice:function(){
       var that = this
       var conf = {
@@ -223,38 +184,38 @@ Component({
         function(res){
           if(res && res.code==0){
             var arr = res.data
-            if(arr.length < 5 && arr.length !== 0){
-              that.setData({
-                len: "container1",
-              })
-            }else{
-              that.setData({
-                len:"container",
-              })
-            }
+            // if(arr.length < 5 && arr.length !== 0){
+            //   that.setData({
+            //     len: "container1",
+            //   })
+            // }else{
+            //   that.setData({
+            //     len:"container",
+            //   })
+            // }
             if (!Utils.isEmptyArr(arr)){
-              let arr1 = [];
-              let arr2 = [];
+              let arr5 = [];
+              let arr6 = [];
               for(let i=0; i<arr.length;i++){
                 if(i % 2==0){
-                  arr1.push(arr[i])
+                  arr5.push(arr[i])
                 }else{
-                  arr2.push(arr[i])
+                  arr6.push(arr[i])
                 }
               }
-              for(let index in arr1){
-                if(arr1[index].photoUrl == null){
-                  arr1[index].photoUrl = "../../images/device/device.png"
+              for(let index in arr5){
+                if(arr5[index].photoUrl == null){
+                  arr5[index].photoUrl = "../../images/device/device.png"
                 }
               }
-              for (let index in arr2) {
-                if (arr2[index].photoUrl == null) {
-                  arr2[index].photoUrl = "../../images/device/device.png"
+              for (let index in arr6) {
+                if (arr6[index].photoUrl == null) {
+                  arr6[index].photoUrl = "../../images/device/device.png"
                 }
               }
               that.setData({
-                deviceArr3:arr1,
-                deviceArr4:arr2,
+                deviceArr3:arr5,
+                deviceArr4:arr6,
               });
             }else{
               wx.showToast({
@@ -278,6 +239,7 @@ Component({
         method: "GET",
         params: {
           key: app.globalData.key,
+          // key: '15725923514766b71b7',
           bizType: app.globalData.bizType,
           phone: app.globalData.phone,
           searchKey: that.data.num,
@@ -287,43 +249,41 @@ Component({
         function (res) {
           if (res && res.code == 0) {
             var arr = res.data
-            console.log(arr)
-            console.log(arr)
-            console.log(arr)
 
-            if (arr.length < 5 && arr.length !== 0) {
-              that.setData({
-                len: "container1",
-              })
-            }else{
-              that.setData({
-                len:"container",
-              })
-            }
+            // if (arr.length < 5 && arr.length !== 0) {
+            //   that.setData({
+            //     len: "container1",
+            //   })
+            // }else{
+            //   that.setData({
+            //     len:"container",
+            //   })
+            // }
             if (!Utils.isEmptyArr(arr)) {
-              let arr1 = [];
-              let arr2 = [];
+              let arr3 = [];
+              let arr4 = [];
               for (let i = 0; i < arr.length; i++) {
                 if (i % 2 == 0) {
-                  arr1.push(arr[i])
+                  arr3.push(arr[i])
                 } else {
-                  arr2.push(arr[i])
+                  arr4.push(arr[i])
                 }
               }
-              for (let index in arr1) {
-                if (arr1[index].photoUrl == null) {
-                  arr1[index].photoUrl = "../../images/device/device.png"
+              for (let index in arr3) {
+                if (arr3[index].photoUrl == null) {
+                  arr3[index].photoUrl = "../../images/device/device.png"
                 }
               }
-              for (let index in arr2) {
-                if (arr2[index].photoUrl == null) {
-                  arr2[index].photoUrl = "../../images/device/device.png"
+              for (let index in arr4) {
+                if (arr4[index].photoUrl == null) {
+                  arr4[index].photoUrl = "../../images/device/device.png"
                 }
               }
               that.setData({
-                deviceArr3: arr1,
-                deviceArr4: arr2,
+                deviceArr3: arr3,
+                deviceArr4: arr4,
               });
+              console.log(that.data.roleName)
             } else {
               wx.showToast({
                 title: '请输入正确查询信息',
@@ -437,20 +397,24 @@ Component({
     },
 
     goDetail:function(e){
-      console.log(e)
-      var id = e.target.dataset.id
+      var id = e.target.dataset.id;
+      if (id =='undefined'){
+        return
+      }
       wx.navigateTo({
         url: "/pages/device/detail/index?id="+id
       });
     },
 
-    goDetail2: function (e) {
-      console.log(e)
-      var id = e.target.dataset.id
-      wx.navigateTo({
-        url: "/pages/device/detail/index?id=" + id
-      });
-    }
+    // goDetail2: function (e) {
+    //   console.log(e)
+    //   var id = e.target.dataset.id
+    //   wx.navigateTo({
+    //     url: "/pages/device/detail/index?id=" + id
+    //   });
+    // },
 
-  }
+
+  },
+
 })

@@ -6,9 +6,13 @@
     "pages/home/index",
     "pages/Mhome/index",
     "pages/device/index",
+    "pages/orderDevice/index",
     "pages/device/detail/index",
     "pages/order/index",
-    "pages/index"
+    "pages/handle/index",
+    "pages/handle/handleDetail/index",
+    "pages/index",
+    "pages/audit/index"
   ],
   "window": {
     "backgroundTextStyle": "light",

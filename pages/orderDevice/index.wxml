@@ -1,0 +1,38 @@
+<!--pages/orderDevice/index.wxml-->
+<view class="container">
+  <view class="header" style="height:{{height}}rpx;z-index:9999">
+    <view style="width:100%;position:fixed;top:0;">
+      <nav-header title="设备列表" showBack="{{false}}" />
+      <view class="search">
+        <view class="sea-area">
+          <image class="sea-img" src="../../images/device/search.png" bindtap="goSearch" />
+          <input class="sea" bindinput="bindNumInput" value="{{num}}" placeholder="搜索资产号或设备编号" placeholder-class="input" bindconfirm="search" confirm-type="search"></input>
+          <image class="del-img" wx:if="{{num?true:false}}" src="../../images/device/del.png" bindtap="delInput" />
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="list-container" style="margin-top:{{height}}rpx"  >
+    <view class="left">
+      <block wx:for="{{deviceArr1}}" wx:key="">
+        <template is="Item" data="{{item}}" />
+      </block>
+    </view>
+    <view class="right">
+      <block wx:for="{{deviceArr2}}" wx:key="">
+        <template is="Item" data="{{item}}" />
+      </block>
+    </view>
+  </view>
+
+</view>
+<template name="Item">
+  <view class="item-container">
+    <image class="dev-img" src="{{item.photo}}" mode="aspectFill" data-id="{{item.assetsId}}" bindtap="goDetail2" />
+    <view class="item">
+      <text class="text" data-id="{{item.assetsId}}" bindtap="goDetail2" >{{item.assetsName}}</text>
+      <view style="flex:1"></view>
+    </view>
+  </view>
+</template>

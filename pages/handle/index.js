@@ -15,19 +15,7 @@ Component({
    */
   data: {
     height: 180,
-    radioValues: [{
-      'value': '未开始',
-      'selected': true
-    },
-    {
-      'value': '进行中',
-      'selected': false
-    },
-    {
-      'value': '已完成',
-      'selected': false
-    },
-    ],
+    radioValues: null,
     finishedDatas: [],
     dataLoaded: false,
     openDatas: [],
@@ -40,24 +28,53 @@ Component({
     hiddenmodalput1: true,
     hiddenmodalput2: true,
     hiddenmodalput: true,
+    audit: false, //false代表未审核 true代表审核记录
+    id: null,
+    judgeUser: app.globalData.roleTypedemo == 'USER_COMPANY_MANAGER' ? false : true,
+    pid: null,
   },
 
-
+  pageLifetimes: {
+    show: function () {
+      var that = this
+      that.queryRecord("0"); //待处理
+      //   wx.getStorage({
+      //   key: 'userInfo',
+      //   success: function (res) {
+      //     if (res && res.data) {
+      //       that.setData({
+      //         userId: res.data.id,
+      //         roleName: res.data.roleName == 'USER_BASIC_VIEW' ? false : true
+      //       },()=>{
+      //         //  if(that.data.roleName==false){
+      //         //    console.log('普通')
+      //         //   that.getOrderDevice()
+      //         //  }else{
+      //         //    console.log('不普通1')
+      //            that.getDevice();
+      //         //  }
+      //       })
+      //     }
+      //   }
+      // })
+    },
+  },
   ready: function () {
     let that = this;
-    // wx.getStorage({
-    //   key: 'userInfo',
-    //   success: function (res) {
-    //     if (res && res.data) {
-    //       that.data.userId = res.data.id;
-          that.queryRecord("0"); //待处理
-          // that.queryRecord("1"); //代表已同意
-          // that.queryRecord("2"); //代表已拒绝
-    //     }
-    //   }
-    // });
+    that.queryRecord("0"); //待处理
+   
     that.setData({
       height: getApp().globalData.isIpx ? 210 : 180,
+      radioValues: [{
+        'value': app.globalData.roleTypedemo == "USER_COMPANY_MANAGER" ? '企业审核' : '个人审核',
+        'selected': true
+      },
+      {
+        'value': '审核记录',
+        'selected': false
+      },
+      ],
+      judgeUser: app.globalData.roleTypedemo == 'USER_COMPANY_MANAGER' ? false : true,
     })
     that.clazzStatus();
   },
@@ -70,76 +87,59 @@ Component({
     // 刷新
     refresh: function () {
       var that = this;
-      that.queryRecord("0"); //待处理
-      that.queryRecord("1"); //代表已同意
-      that.queryRecord("2"); //代表已拒绝
+      that.queryRecord("0"); //企业审核
+      that.queryRecord("1"); //审核记录
       setTimeout(function () {
         that.selectComponent('#manageren').stopRefresh();
       }, 1000)
     },
 
     queryRecord: function (type) {
+      console.log(this.data)
       var that = this;
       var conf = {
         method: "GET",
         params: {
-          status: type,
-          userId: app.globalData.userId,
-          bizType: app.globalData.bizType
+          key: app.globalData.key,
+          type: app.globalData.roleTypedemo == 'USER_COMPANY_MANAGER'?1:0,
+          bizType: app.globalData.bizType,
+          record: type==0?false:true
         }
       };
       // wx.showLoading({
       //   title: '正在加载...',
       // })
 
-      NetworkService.call("queryRecord", conf,
+      NetworkService.call("queryAudit", conf,
         function (res) {
           wx.hideLoading();
           if (res && res.code == 0) {
             var datas = res.data;
-            for (var i = 0; i < datas.length; i++) {
-            //   datas[i].context = JSON.parse(datas[i].context);
-            //   datas[i].start = datas[i].context.startTime
-              datas[i].startTime = util.dateFttt("yyyy-MM-dd hh:mm", datas[i].startTime)
-            //   datas[i].gmtCreate = util.dateFttt("yyyy-MM-dd hh:mm", datas[i].gmtCreate);
-              datas[i].finishTime = util.dateFtttt("hh:mm", datas[i].endTime)
-            }
+            // for (var i = 0; i < datas.length; i++) {
+            //   //   datas[i].context = JSON.parse(datas[i].context);
+            //   //   datas[i].start = datas[i].context.startTime
+            //   datas[i].startTime = util.dateFttt("yyyy-MM-dd hh:mm", datas[i].startTime)
+            //   //   datas[i].gmtCreate = util.dateFttt("yyyy-MM-dd hh:mm", datas[i].gmtCreate);
+            //   datas[i].finishTime = util.dateFtttt("hh:mm", datas[i].endTime)
+            // }
 
             if (type == "0") {
-              //判断距离现在是不是不足30分钟
-              // var now = new Date().getTime();
-              // for (var i = 0; i < res.data.length; i++) {
-              //   if ((res.data[i].start - now) < 1800000) {
-              //     res.data[i].cancelAble0 = false;
-              //   } else {
-              //     res.data[i].cancelAble0 = true;
-              //   }
-              // }
               that.setData({
                 finishedDatas: datas,
                 dataLoaded: true
               })
             }
             if (type == "1") {
-              //判断距离现在是不是不足30分钟
-              // var now = new Date().getTime();
-              // for (var i = 0; i < res.data.length; i++) {
-              //   if ((res.data[i].start - now) < 1800000) {
-              //     res.data[i].cancelAble = false;
-              //   } else {
-              //     res.data[i].cancelAble = true;
-              //   }
-              // }
               that.setData({
                 openDatas: res.data,
 
               })
             }
-            if (type == "2") {
-              that.setData({
-                processingDatas: res.data,
-              })
-            }
+            // if (type == "2") {
+            //   that.setData({
+            //     processingDatas: res.data,
+            //   })
+            // }
           } else {
             wx.showToast({
               title: '网络失败',
@@ -155,6 +155,95 @@ Component({
       );
     },
 
+    goHandleDetail: function(e){
+      var id = e.currentTarget.dataset.taskid
+      wx.navigateTo({
+        url: "/pages/handle/handleDetail/index?id="+id
+      });
+    },
+
+    goAgree: function(e){
+      var id= e.currentTarget.dataset.aid;
+      var uid = e.currentTarget.dataset.auid;
+      var that = this;
+      wx.showLoading({
+        title: '正在加载...',
+      })
+      var conf = {
+        method: "POST",
+        urlParams: true,
+        params: {
+          bizType: app.globalData.bizType,
+          key: app.globalData.key,
+          type: 0,
+          uid: uid,
+          id: id,
+          status: 1
+        }
+      }
+      NetworkService.call("startAudit", conf,
+        function (res) {
+          wx.hideLoading();
+          if (res && res.code == 0) {
+            wx.showToast({
+              title: '已同意',
+            });
+            that.queryRecord("0"); //企业审核
+            // setTimeout(function () {
+            //   wx.navigateBack()
+            // }, 500)
+          } else {
+            wx.showToast({
+              title: res.message,
+            });
+          }
+        },
+        function (error) {
+          wx.hideLoading();
+        }
+      );
+    },
+    goDisagree: function (e) {
+      var id = e.currentTarget.dataset.bid;
+      var uid = e.currentTarget.dataset.buid;
+      var that = this;
+      wx.showLoading({
+        title: '正在加载...',
+      })
+      var conf = {
+        method: "POST",
+        urlParams: true,
+        params: {
+          bizType: app.globalData.bizType,
+          key: app.globalData.key,
+          type: 0,
+          uid: uid,
+          id: id,
+          status: 2
+        }
+      }
+      NetworkService.call("startAudit", conf,
+        function (res) {
+          wx.hideLoading();
+          if (res && res.code == 0) {
+            wx.showToast({
+              title: '已拒绝',
+            });
+            that.queryRecord("0"); //企业审核
+            // setTimeout(function () {
+            //   wx.navigateBack()
+            // }, 500)
+          } else {
+            wx.showToast({
+              title: res.message,
+            });
+          }
+        },
+        function (error) {
+          wx.hideLoading();
+        }
+      );
+    },
     //取消预约
     // cancelRecord: function () {
     //   var that = this;
@@ -342,9 +431,9 @@ Component({
         this.queryRecord(1); //已同意
       }
 
-      if (index == 2) {
-        this.queryRecord(2); //已拒绝
-      }
+      // if (index == 2) {
+      //   this.queryRecord(2); //已拒绝
+      // }
 
       // 写回数据
       this.setData({

@@ -1,6 +1,5 @@
 {
   "component": true,
-  "enablePullDownRefresh": true,
   "usingComponents": {
     "nav-header": "../../component/header/header"
   }

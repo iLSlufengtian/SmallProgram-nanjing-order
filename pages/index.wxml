@@ -8,15 +8,20 @@
   <view style="height:{{globalHeight}}rpx" class="content" wx:if="{{type=='manager'&&tabsManager[1].checked}}">
       <order/>
   </view>
-
   <view style="height:{{globalHeight}}rpx" class="content" wx:if="{{type=='manager'&&tabsManager[2].checked}}">
+      <handle/>
+  </view>
+
+  <view style="height:{{globalHeight}}rpx" class="content" wx:if="{{type=='manager'&&tabsManager[3].checked}}">
       <mine/>
   </view>
   <!--------------------------------------普通用户角色----------------------------------------->
   <view  style="height:{{globalHeight}}rpx" class="content" wx:if="{{type=='normal'&&tabsNormal[0].checked}}">
-    <device/>
-
+    <orderDevice/>
   </view>
+   <!-- <view  style="height:{{globalHeight}}rpx" class="content" wx:if="{{type=='normal'&&tabsNormal[0].checked&&app.globalData.roleTypedemo=='USER_DEVICE_OWNER'}}">
+    <device/>
+  </view> -->
 
   <view style="height:{{globalHeight}}rpx" class="content" wx:if="{{type=='normal'&&tabsNormal[1].checked}}">
      <order/>
@@ -24,6 +29,40 @@
   <view style="height:{{globalHeight}}rpx" class="content" wx:if="{{type=='normal'&&tabsNormal[2].checked}}">
       <mine/>
   </view>
+
+    <!--------------------------------------设备管理员用户角色----------------------------------------->
+  <view  style="height:{{globalHeight}}rpx" class="content" wx:if="{{type=='deviceManager'&&tabsDevice[0].checked}}">
+    <device/>
+  </view>
+   <!-- <view  style="height:{{globalHeight}}rpx" class="content" wx:if="{{type=='normal'&&tabsNormal[0].checked&&app.globalData.roleTypedemo=='USER_DEVICE_OWNER'}}">
+    <device/>
+  </view> -->
+
+  <view style="height:{{globalHeight}}rpx" class="content" wx:if="{{type=='deviceManager'&&tabsDevice[1].checked}}">
+     <order/>
+  </view>
+  <view style="height:{{globalHeight}}rpx" class="content" wx:if="{{type=='deviceManager'&&tabsDevice[2].checked}}">
+      <mine/>
+  </view>
+
+      <!--------------------------------------公司管理员用户角色----------------------------------------->
+  <view  style="height:{{globalHeight}}rpx" class="content" wx:if="{{type=='depManager'&&tabsDep[0].checked}}">
+    <orderDevice/>
+  </view>
+   <!-- <view  style="height:{{globalHeight}}rpx" class="content" wx:if="{{type=='normal'&&tabsNormal[0].checked&&app.globalData.roleTypedemo=='USER_DEVICE_OWNER'}}">
+    <device/>
+  </view> -->
+
+  <view style="height:{{globalHeight}}rpx" class="content" wx:if="{{type=='depManager'&&tabsDep[1].checked}}">
+     <order/>
+  </view>
+    <view style="height:{{globalHeight}}rpx" class="content" wx:if="{{type=='depManager'&&tabsDep[2].checked}}">
+      <handle/>
+  </view>
+  <view style="height:{{globalHeight}}rpx" class="content" wx:if="{{type=='depManager'&&tabsDep[3].checked}}">
+      <mine/>
+  </view>
+
   <!-- <view class="content" wx:if="{{type=='normal'&&tabsNormal[0].checked}}">
     <mine/>
   </view>
@@ -35,7 +74,7 @@
   </view> -->
   <!-- 底部tabBar -->
   <view class="bottom-tab">
-    <block wx:for="{{type=='manager'?tabsManager:tabsNormal}}" wx:key="" wx:for-index="idx" data-item="item">
+    <block wx:for="{{type=='manager'?tabsManager:type=='normal'?tabsNormal:type=='deviceManager'?tabsDevice:tabsDep}}" wx:key="" wx:for-index="idx" data-item="item">
       <view bindtap="bindChange" class="tab-container" data-idx="{{idx}}">
         <image src="{{item.checked ? item.selectedIcon : item.icon}}" class="left-img" mode="aspectFit" />
         <view style="color:{{item.checked?'#1DABD9':'#999'}};font-size: 20rpx;">{{item.text}}</view>

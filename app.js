@@ -15,7 +15,7 @@ App({
     serial: '', //请求接口要用的
     phone: '', //请求接口要用的
   },
-  onLaunch: function(options) {
+  onShow: function(options) {
     let that = this;
     //设置全局scene
     var scene = options.scene;

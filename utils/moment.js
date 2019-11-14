@@ -32,7 +32,7 @@ Moment.prototype.format = function (format) {
     "(h+|H+)": date.getHours(), //小时 
     "m+": date.getMinutes(), //分 
     "s+": date.getSeconds(), //秒 
-    "q+": Math.floor((date.getMonth() + 3) / 3), //季度 
+    "q+": Math.floor((date.getMonth() + 3) / 3),  
     "S": date.getMilliseconds() //毫秒 
   };
   var week = {
@@ -68,7 +68,8 @@ Moment.prototype.differ = function (date) {
     date = new Date(date);
   var time1 = this.date.getTime();
   var time2 = date.getTime();
-  var differ = Math.ceil((time1 - time2) / (1000 * 3600 * 24));//除不尽时,向上取整
+  //除不尽时,向上取整
+  var differ = Math.ceil((time1 - time2) / (1000 * 3600 * 24));
   return differ;
 }
 

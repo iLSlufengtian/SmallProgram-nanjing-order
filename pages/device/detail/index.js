@@ -45,6 +45,7 @@ Page({
 
     userId: null,
     roleName: null,
+    showModalT: false,
   },
 
   /**
@@ -53,22 +54,25 @@ Page({
   onLoad: function(options) {
     var that = this;
     var deviceId = options.id;
-
-    wx.getStorage({
-      key: 'userInfo',
-      success: function(res) {
-        if (res && res.data) {
-          console.log(res)
-          that.setData({
-            userId: res.data.id,
-            roleName: res.data.roleName == 'USER_BASIC_VIEW' ? false : true
-          })
-        }
-      }
-    })
+    
+    console.log(app.globalData)
+    // wx.getStorage({
+    //   key: 'userInfo',
+    //   success: function(res) {
+    //     if (res && res.data) {
+    //       console.log(res)
+    //       that.setData({
+    // //         userId: res.data.id,
+    //         roleName: app.globalData.roleTypedemo == 'USER_BASIC_VIEW' ? false : true
+    //       })
+    //     }
+    //   }
+    // })
 
     this.setData({
       deviceId: deviceId,
+      roleName: app.globalData.roleTypedemo == 'USER_COMPANY_MANAGER' ? true : app.globalData.roleTypedemo =='USER_DEVICE_OWNER'?true:false
+
     })
     // let that = this;
     that.queryDeviceData()
@@ -77,6 +81,12 @@ Page({
   onReady: function() {
     let that = this;
     that.queryDeviceData()
+  },
+
+  testClick:function() {
+    wx.redirectTo({
+      url: '/pages/home/index?id='+this.data.deviceId,
+    })
   },
 
   // 根据deviceId拿到设备详情
@@ -124,15 +134,21 @@ Page({
     var that = this;
     that.setData({
       enableSharing: !that.data.enableSharing
-    },()=>{
+    }, () => {
       wx.showModal({
         title: '提示',
-        content: '确认将设备调设置为可预约（不可预约）吗',
+        content: '确认将设备设置为可预约（不可预约）吗',
         success(res) {
           if (res.confirm) {
             var a2 = [];
             a2.push(parseInt(that.data.deviceId));
-            that.changeStatus(a2);
+            console.log(that.data.enableSharing)
+            if (that.data.enableSharing){
+              that.changeStatus1(a2);
+            }else {
+              that.changeStatus(a2);
+            }
+            
           } else if (res.cancel) {
             that.setData({
               enableSharing: !that.data.enableSharing
@@ -144,22 +160,38 @@ Page({
     })
   },
 
-  changeStatus: function (arr) {
+  changeStatus: function(arr) {
     var that = this;
     var conf = {
       method: "PUT",
       params: {
         bizType: app.globalData.bizType,
-        userId: that.data.userId,
+        userId: app.globalData.userId,
         notEnableAssets: arr,
+      }
+    }
+    NetworkService.call("changeOrderStatus", conf,
+      function(res) {
+        console.log(res)
+      },
+      function(err) {
+
+      }
+    )
+  },
+  changeStatus1: function (arr) {
+    var that = this;
+    var conf = {
+      method: "PUT",
+      params: {
+        bizType: app.globalData.bizType,
+        userId: app.globalData.userId,
+        enableAssets: arr,
       }
     }
     NetworkService.call("changeOrderStatus", conf,
       function (res) {
         console.log(res)
-
-
-
       },
       function (err) {
 
@@ -182,7 +214,7 @@ Page({
           if (that.data.waitTime < 0) {
             clearInterval(that.data.inter)
             that.setData({
-              sendTime: '确定',
+              sendTime: 88,
             })
           }
         }, 1000)
@@ -215,16 +247,55 @@ Page({
     })
   },
 
-  
+
   onConfimModal: function() {
     var that = this;
-    if (that.data.sendTime!="确定"){
+    if (that.data.sendTime != 88) {
       return;
-    }else{
+    } else {
       clearInterval(that.data.inter)
       that.setData({
         showModalX: false,
       })
+      wx.showLoading({
+        title: '请稍等...',
+      })
+  console.log(app.globalData.userId)
+      var conf = {
+        urlParams: true,
+        method: "POST",
+        params: {
+          id: that.data.deviceId,
+          lesseeId: app.globalData.userId,
+          bizType: app.globalData.bizType,
+          startTime: util.ftTimeLong(that.data.startTime.replace(/\-/g, "/")), //2019-06-08 12:00:00
+          endTime: util.ftTimeLong(that.data.endTime.replace(/\-/g, "/")), //2019-06-08 15:00:00
+        }
+      }
+      NetworkService.call("orderDevice", conf,
+        function(res) {
+          wx.hideLoading();
+          if (res && res.code == 0) {
+            wx.showToast({
+              title: '预约成功',
+            });
+
+            setTimeout(function() {
+              wx.navigateBack()
+            }, 500)
+          } else {
+            wx.showToast({
+              title: '预约失败',
+            });
+          }
+        },
+        function(error) {
+          wx.hideLoading();
+          wx.showToast({
+            title: '预约失败',
+          });
+        }
+      );
     }
   },
 
@@ -233,58 +304,23 @@ Page({
     var that = this;
     if (!that.data.startTime) {
       wx.showToast({
-        title: '请先选择预约时间',
+        title: '请选择时间',
         duration: 1000
       });
       this.showDelModal();
       return;
     }
 
-    if (that.data.sendTime !== '确定') {
-      wx.showToast({
-        title: '您未同意预约规则，请重新选择时间',
-        duration: 1000
-      });
+    if (that.data.sendTime !== 88) {
+      // wx.showToast({
+      //   title: '您未同意协议',
+      //   duration: 1000
+      // });
       this.judgeTime();
       return;
     }
 
-    wx.showLoading({
-      title: '请稍等...',
-    })
 
-    var conf = {
-      urlParams: true,
-      method: "POST",
-      params: {
-        id: that.data.deviceId,
-        lesseeId: that.data.userId,
-        bizType: app.globalData.bizType,
-        startTime: util.ftTimeLong(that.data.startTime.replace(/\-/g, "/")), //2019-06-08 12:00:00
-        endTime: util.ftTimeLong(that.data.endTime.replace(/\-/g, "/")), //2019-06-08 15:00:00
-      }
-    }
-    NetworkService.call("orderDevice", conf,
-      function(res) {
-        wx.hideLoading();
-        if (res && res.code == 0) {
-          wx.showToast({
-            title: '预约成功',
-          });
-
-          setTimeout(function() {
-            wx.navigateBack()
-          }, 500)
-        } else {
-          wx.showToast({
-            title: res.message,
-          });
-        }
-      },
-      function(error) {
-        wx.hideLoading();
-      }
-    );
 
   },
 
@@ -311,8 +347,8 @@ Page({
       method: "GET",
       params: {
         id: that.data.deviceId,
-        // startTime: start,
-        // endTime: end,
+        startTime: start,
+        endTime: end,
         bizType: app.globalData.bizType
       }
     }
@@ -398,6 +434,7 @@ Page({
     })
   },
 
+
   //设置白色和灰色
   setWhiteAndGray(today, start, end) {
     var datas = this.data.timeSlot;
@@ -448,10 +485,10 @@ Page({
         // }
 
         // if (status == 1) {
-          //已审核通过
-          datas[i].imageType = 1;
-          datas[i].imageSource = '/images/order/gray.png';
-          datas[i].company = companyName
+        //已审核通过
+        datas[i].imageType = 1;
+        datas[i].imageSource = '/images/order/gray.png';
+        datas[i].company = companyName
         // }
       }
     }
@@ -512,7 +549,7 @@ Page({
     var endTime = endArr[1];
     this.setData({
       // timeStr: arr[0] + "年" + arr[1] + "月" + arr[2] + "日 " + startTime + "~" + endTime,
-      timeStr:'',
+      timeStr: '',
       timeStr1: arr[0] + "年" + arr[1] + "月" + arr[2] + "日 ",
       timeStr2: startTime + "~" + endTime,
       showModal: false,
@@ -682,7 +719,7 @@ Page({
   showDelModal() {
     // 日历显示动画
     var animation = wx.createAnimation({
-      duration: 200,
+      duration: 20,
       timingFunction: "ease",
       delay: 0
     })
@@ -700,13 +737,13 @@ Page({
         animationData: animation.export() // export 方法每次调用后会清掉之前的动画操作。
       })
       console.log(this)
-    }, 200)
+    }, 20)
   },
 
   hideDelModal() {
     // 隐藏遮罩层
     var animation = wx.createAnimation({
-      duration: 600,
+      duration: 60,
       timingFunction: "ease",
       delay: 0
     })
@@ -721,10 +758,14 @@ Page({
         animationData: animation.export(),
         showModal: false
       })
-    }.bind(this), 200)
+    }.bind(this), 20)
   },
 
-
+  hideModalT(){
+    this.setData({
+      showModalT:false,
+    })
+  },
 
 
 

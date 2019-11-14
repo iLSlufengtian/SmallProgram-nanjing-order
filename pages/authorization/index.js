@@ -7,6 +7,9 @@ Page({
     url: '',
   },
   onLoad: function(options) {
+    // wx.redirectTo({
+    //   url: '/pages/home/index',
+    // })
     var that = this;
     if (app.globalData.scene == 1047) {
       var params = decodeURIComponent(options.scene)
@@ -15,7 +18,10 @@ Page({
       var serial1 = params.split('&')[1]
       app.globalData.bizType = bizType1;
       app.globalData.serial = serial1;
-    } else {
+    } else if(app.globalData.scene == 1043) {
+
+    }
+    else {
       app.globalData.bizType = '1';
     }
     that.getKey();
@@ -70,16 +76,43 @@ Page({
         if (res && res.code == 0) {
           var roleTypes = res.data.roleType
           if (res.success == true) {
+            console.log(res)
             app.globalData.phone = res.data.phone;
-            if (roleTypes == 'USER_COMPANY_MANAGER') {
-              wx.redirectTo({
-                url: '/pages/index?roleType=manager',
-              })
-            } else {
-              wx.redirectTo({
-                url: '/pages/index?roleType=normal',
-              })
+            app.globalData.userId = res.data.userId;
+            app.globalData.roleTypedemo = res.data.roleType;
+            if (app.globalData.scene == 1047){
+              // 系统管理员和设备管理员可以进行通断电
+              if (roleTypes == 'USER_COMPANY_MANAGER' || roleTypes == 'USER_DEVICE_OWNER') {      
+                wx.redirectTo({
+                  url: '/pages/Mhome/index',
+                })
+              } else {
+                wx.redirectTo({
+                  url: '/pages/home/index',
+                })
+              }
+            }else{
+              //根据roleTypes的不同判断显示的tabbar是否相同
+              // 系统管理员可以进入带审核的首页
+              if (roleTypes == 'USER_COMPANY_MANAGER') {
+                wx.redirectTo({
+                  url: '/pages/index?roleType=manager',
+                })
+              } else if (roleTypes == 'USER_DEPARTMENT_MANAGER') {
+                wx.redirectTo({
+                  url: '/pages/index?roleType=depManager',
+                })
+              } else if (roleTypes == 'USER_DEVICE_OWNER'){
+                wx.redirectTo({
+                  url: '/pages/index?roleType=deviceManager',
+                })
+              } else {
+                wx.redirectTo({
+                  url: '/pages/index?roleType=normal',
+                })
+              }
             }
+            
           } else {
             wx.redirectTo({
               url: '/pages/login/login',
@@ -95,10 +128,10 @@ Page({
         wx.redirectTo({
           url: '/pages/login/login',
         })
-        wx.showToast({
-          title: '请求失败！！！',
-          icon: 'none'
-        })
+        // wx.showToast({
+        //   title: '请求失败！！！',
+        //   icon: 'none'
+        // })
       })
   },
 })

@@ -167,7 +167,10 @@ Page({
     NetworkService.call("login",conf,
     function(res){
       if(res && res.code==0){
-        app.globalData.phone = that.data.phone
+        console.log(res)
+        app.globalData.phone = that.data.phone;
+        app.globalData.userId = res.data.userId;
+        app.globalData.roleTypedemo = res.data.roleType;
         if (res.success == false) {
           that.setData({
             showModal: true
@@ -175,11 +178,20 @@ Page({
           return
         }else{
           var roleTypes = res.data.roleType
+          // 登陆成功，只有系统管理员和公司管理员在底部显示审核按钮
           if (roleTypes == 'USER_COMPANY_MANAGER') {
             wx.redirectTo({
               url: '/pages/index?roleType=manager',
             })
-          } else {
+          } else if (roleTypes == 'USER_DEVICE_OWNER') {
+            wx.redirectTo({
+              url: '/pages/index?roleType=deviceManager',
+            })
+          } else if (roleTypes == 'USER_DEPARTMENT_MANAGER') {
+            wx.redirectTo({
+              url: '/pages/index?roleType=depManager',
+            })
+          }else {
             wx.redirectTo({
               url: '/pages/index?roleType=normal',
             })
