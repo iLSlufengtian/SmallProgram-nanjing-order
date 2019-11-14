@@ -12,7 +12,7 @@ Page({
 
   },
   /**
-   * 页面的初始数据
+   * 页面的初始数据   企业审核点击会进入详情页面，进行同意和拒绝
    */
   data: {
     windowWidth: app.globalData.windowWidth,

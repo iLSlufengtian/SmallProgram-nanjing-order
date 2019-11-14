@@ -3,7 +3,7 @@ var NetworkService = require("../../utils/NetworkService.js")
 Page({
 
   /**
-   * 页面的初始数据
+   * 页面的初始数据  普通用户等扫描设备码进入该页面
    */
   data: {
     isIpx: getApp().globalData.isIpx,

@@ -3,7 +3,7 @@ var NetworkService = require("../../utils/NetworkService.js")
 Page({
 
   /**
-   * 页面的初始数据
+   * 页面的初始数据  系统管理员和设备管理员通过扫描设备码进入该页面，可以进行设备的通断电
    */
   data: {
     isIpx: getApp().globalData.isIpx,
